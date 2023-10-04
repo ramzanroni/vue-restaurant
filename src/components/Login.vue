@@ -1,38 +1,35 @@
 <template>
     <img class="logo" src="../assets/logo.png" alt="">
-    <h2 style="text-align: center;">Sign Up</h2>
+    <h2 style="text-align: center;">Login</h2>
     <div class="register">
-        <input type="text" name="name" id="name" v-model="name" placeholder="Enter Name">
         <input type="text" name="email" id="email" v-model="email" placeholder="Enter Email">
         <input type="text" name="password" id="password" v-model="password" placeholder="Enter Password">
-        <button @click="signUp">Sign Up</button>
+        <button @click="login">Sign Up</button>
         <p>
-            <router-link to="/login">Login</router-link>
+            <router-link to="/sign-up">Sign Up</router-link>
         </p>
     </div>
 </template>
 <script>
 import axios from 'axios';
 export default{
-    name:'SignUp',
+    name:"Login",
     data(){
-        return{
-            name:'',
+        return {
             email:'',
             password:''
         }
     },
     methods:{
-       async signUp(){
-            let result=await axios.post("http://localhost:3000/users",{
-                name:this.name,
-                email:this.email,
-                password:this.password
-            });
-            if(result.status==201){
-                localStorage.setItem('user-info', JSON.stringify(result.data));
+       async login(){
+            let result=await axios.get(
+                `http://localhost:3000/users?email=${this.email}&password=${this.password}`
+            );
+            if(result.status==200 && result.data.length>0){
+                localStorage.setItem('user-info', JSON.stringify(result.data[0]));
                 this.$router.push({name:'Home'});
-
+            }else{
+                alert('Wrong Information');
             }
         }
     },
