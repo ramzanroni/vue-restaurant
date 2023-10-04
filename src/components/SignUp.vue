@@ -20,6 +20,7 @@ export default{
     },
     methods:{
         signUp(){
+            let re
             console.log(this.name, this.email, this.password);
         }
     }
