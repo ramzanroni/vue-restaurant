@@ -1,52 +1,62 @@
 <template>
-    <img class="logo" src="../assets/logo.png" alt="">
-    <h2 style="text-align: center;">Login</h2>
-    <div class="register">
-        <input type="text" name="email" id="email" v-model="email" placeholder="Enter Email">
-        <input type="text" name="password" id="password" v-model="password" placeholder="Enter Password">
-        <button @click="login">Sign Up</button>
-        <p>
-            <router-link to="/sign-up">Sign Up</router-link>
-        </p>
+    <div class="signUp">
+        <img class="logo" src="../assets/logo.png" alt="">
+        <h2 style="text-align: center;">Login</h2>
+        <div class="register">
+            <input type="text" name="email" id="email" v-model="email" placeholder="Enter Email">
+            <input type="text" name="password" id="password" v-model="password" placeholder="Enter Password">
+            <button @click="login">Sign Up</button>
+            <p>
+                <router-link to="/sign-up">Sign Up</router-link>
+            </p>
+        </div>
     </div>
 </template>
 <script>
 import axios from 'axios';
-export default{
-    name:"Login",
-    data(){
+export default {
+    name: "Login",
+    data() {
         return {
-            email:'',
-            password:''
+            email: '',
+            password: ''
         }
     },
-    methods:{
-       async login(){
-            let result=await axios.get(
+    methods: {
+        async login() {
+            let result = await axios.get(
                 `http://localhost:3000/users?email=${this.email}&password=${this.password}`
             );
-            if(result.status==200 && result.data.length>0){
+            if (result.status == 200 && result.data.length > 0) {
                 localStorage.setItem('user-info', JSON.stringify(result.data[0]));
-                this.$router.push({name:'Home'});
-            }else{
+                this.$router.push({ name: 'Home' });
+            } else {
                 alert('Wrong Information');
             }
         }
     },
-    mounted(){
-        let user=localStorage.getItem('user-info');
-        if(user){
-            this.$router.push({name:'Home'});
+    mounted() {
+        let user = localStorage.getItem('user-info');
+        if (user) {
+            this.$router.push({ name: 'Home' });
         }
     },
 }
 </script>
 <style scoped>
-.logo{
-    width: 300px;
-    height: 300px;
+.signUp {
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
 }
-.register input{
+
+.logo {
+    width:250px;
+}
+
+.register input {
     width: 300px;
     height: 40px;
     padding-left: 20px;
@@ -57,7 +67,8 @@ export default{
     border: 1px solid skyblue;
     border-bottom: 1px solid #f97839;
 }
-.register button{
+
+.register button {
     width: 300px;
     height: 40px;
     border: 1px solid skyblue;
@@ -65,5 +76,4 @@ export default{
     cursor: pointer;
     color: white;
     font-weight: bold;
-}
-</style>
+}</style>
