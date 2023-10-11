@@ -26,6 +26,7 @@
 </template>
 <script>
 import Header from './Header.vue';
+import axios from 'axios';
 export default{
     name:"Add",
     components:{
@@ -44,9 +45,18 @@ export default{
         }
     },
     methods:{
-        addRestaurant(){
-            console.log(this.restaurant)
+      async addRestaurant() {
+    try {
+        let result = await axios.post('http://localhost:3000/restaurant', this.restaurant);
+        this.restaurants = result.data;
+        if(result.status===200){
+          this.$router.push({name:'Home'});
         }
+    } catch (error) {
+        console.error(error);
+        alert('Somethink is wrong.');
+    }
+}
     },
     mounted(){
         let user=localStorage.getItem('user-info');

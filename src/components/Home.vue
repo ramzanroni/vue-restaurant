@@ -11,12 +11,14 @@
             <div class="card_detail text-left">
                 <h4>{{ restaurant.name }}</h4>
                 <p>
-                   {{ restaurant.address}}
+                    {{ restaurant.address }}
                 </p>
                 <div class="type">
-                    <span href="#Italian">{{restaurant.phone}}</span>
+                    <span href="#Italian">{{ restaurant.phone }}</span>
                     <span href="#Vegetarian">{{ restaurant.email }}</span>
                 </div>
+                <router-link class="updateBtn" :to="'/update/' + restaurant.id">Update</router-link>
+                <button class="deleteBtn" @click="deleteRestaurant(restaurant.id)">Delete</button>
             </div>
         </a>
     </div>
@@ -36,18 +38,27 @@ export default {
         }
     },
     methods: {
+        async loadData() {
+            let user = localStorage.getItem('user-info');
+            this.name = JSON.parse(user).name;
+            if (!user) {
+                this.$router.push({ name: 'Login' });
+            }
+
+            let result = await axios.get('http://localhost:3000/restaurant');
+            this.restaurants = result.data;
+            // console.log(this.restaurants);
+        },
+        async deleteRestaurant(id) {
+            let result = await axios.delete('http://localhost:3000/restaurant/' + id);
+            if (result.status === 200) {
+                this.loadData();
+            }
+        },
 
     },
-    async mounted() {
-        let user = localStorage.getItem('user-info');
-        this.name = JSON.parse(user).name;
-        if (!user) {
-            this.$router.push({ name: 'Login' });
-        }
-
-        let result = await axios.get('http://localhost:3000/restaurant');
-        this.restaurants = result.data;
-        console.log(this.restaurants);
+    mounted() {
+        this.loadData()
     },
 }
 </script>
@@ -154,4 +165,34 @@ export default {
     display: inline-block;
     vertical-align: middle;
     margin-left: 2px;
-}</style>
+}
+
+.updateBtn {
+    background-color: #fc9d52;
+    border: none;
+    color: white;
+    padding: 4px 11px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 11px;
+    cursor: pointer;
+}
+
+.deleteBtn {
+    background-color: #fd3b3b;
+    border: none;
+    color: white;
+    padding: 7px 11px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 11px;
+    cursor: pointer;
+    margin-left: 15px;
+}
+</style>
